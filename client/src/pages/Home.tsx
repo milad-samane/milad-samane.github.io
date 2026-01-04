@@ -278,18 +278,35 @@ export default function Home() {
             }}
           />
 
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
-            Forever Starts Now
-          </h2>
-
-          <p className="font-serif-accent text-2xl italic text-foreground/70 mb-8">
-            "In you, I found my home, my love, and my forever."
-          </p>
-
-          <p className="text-lg text-foreground/80 leading-relaxed mb-8">
-            Thank you for being the best part of my story. Here's to many more years of
-            laughter, love, and unforgettable moments together.
-          </p>
+          <div className="font-persian text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 text-right space-y-6">
+            <p className="font-semibold text-primary mb-4">
+              به نامِ آفریننده عشق
+            </p>
+            <p>
+              نازنینم، خانم‌گلیِ من،
+            </p>
+            <p>
+              امروز که به عقب نگاه می‌کنم، به هجدهم دی‌ماه سال گذشته، باورم نمی‌شود که یک «سلام» ساده و کمی شوخی، سرآغازِ زیباترین فصل زندگی من شد. انگار همین دیروز بود که لابلای اولین حرف‌هایمان فهمیدیم چقدر دنیایمان به هم نزدیک است
+            </p>
+            <p>
+              یادم هست چقدر زود صمیمی شدیم. همان شب‌ها بود که فهمیدم تو فقط یک همراه نیستی، بلکه کسی هستی که نگاه عمیق و مسئولانه‌اش به زندگی و آینده، دقیقا همان چیزی است که همیشه در رویاهایم به دنبالش بودم.
+            </p>
+            <p>
+              عزیزِ دلم، هرگز فراموش نمی‌کنم، آن روزهای جنگ و نامزدی، لرزش صدایم و تپش قلبم گواهی می‌داد که نیمه‌ی گمشده‌ام را یافته‌ام و می‌خواهم با تمام توان برای آن تلاش کنم. از آن روز به بعد، واژه‌ی «ما» برای من معنای دیگری پیدا کرد.
+            </p>
+            <p>
+              در این یک سال، ما از مرزهای یک آشنایی ساده گذشتیم و ریشه‌هایمان در خانه‌های هم دوید.
+            </p>
+            <p>
+              «نفسِ» من، تو حالا تمامِ دنیای منی. در این سالگرد، دوباره به تو قول می‌دهم که همان تکیه‌گاهی باشم که همیشه آرزویش را داشتی. ممنونم که با آمدنت، زمستان سرد دی‌ماه مرا به بهاری همیشگی تبدیل کردی.
+            </p>
+            <p className="font-semibold text-primary mt-6">
+              سالگردِ یکی شدنِ دل‌هایمان مبارک، گلِ من.
+            </p>
+            <p className="text-foreground/70 mt-4">
+              دوستدارِ همیشگی تو، میلاد
+            </p>
+          </div>
 
           <div className="flex justify-center gap-4">
             <Button

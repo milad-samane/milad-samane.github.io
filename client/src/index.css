@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -139,6 +140,9 @@
   }
   .font-serif-accent {
     font-family: 'Cormorant Garamond', serif;
+  }
+  .font-persian {
+    font-family: 'Vazirmatn', sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
