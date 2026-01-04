@@ -6,11 +6,70 @@ import path from "path";
 import { defineConfig } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime()];
+// #region agent log
+const logPath = '/home/milad/projects/personal/milad-samane.github.io/.cursor/debug.log';
+const log = (data: any) => {
+  try {
+    fs.appendFileSync(logPath, JSON.stringify({...data, timestamp: Date.now(), sessionId: 'debug-session'}) + '\n');
+  } catch {}
+};
+
+const buildLoggerPlugin = () => ({
+  name: 'build-logger',
+  closeBundle: () => {
+    const outDir = path.resolve(import.meta.dirname, "dist/public");
+    const indexPath = path.join(outDir, "index.html");
+    const nojekyllPath = path.join(outDir, ".nojekyll");
+    const fourOhFourPath = path.join(outDir, "404.html");
+    const indexExists = fs.existsSync(indexPath);
+    // #region agent log
+    log({location: 'vite.config.ts:build-logger', message: 'Before .nojekyll creation', data: {nojekyllPath, exists: fs.existsSync(nojekyllPath)}, hypothesisId: 'E'});
+    log({location: 'vite.config.ts:build-logger', message: 'Before 404.html creation', data: {fourOhFourPath, exists: fs.existsSync(fourOhFourPath)}, hypothesisId: 'J'});
+    // #endregion
+    try {
+      fs.writeFileSync(nojekyllPath, '');
+      // #region agent log
+      log({location: 'vite.config.ts:build-logger', message: '.nojekyll created', data: {nojekyllPath, success: true}, hypothesisId: 'E'});
+      // #endregion
+    } catch (e) {
+      // #region agent log
+      log({location: 'vite.config.ts:build-logger', message: '.nojekyll creation failed', data: {error: String(e)}, hypothesisId: 'E'});
+      // #endregion
+    }
+    if (indexExists) {
+      try {
+        const indexContent = fs.readFileSync(indexPath, 'utf-8');
+        fs.writeFileSync(fourOhFourPath, indexContent);
+        // #region agent log
+        log({location: 'vite.config.ts:build-logger', message: '404.html created from index.html', data: {fourOhFourPath, success: true, size: indexContent.length}, hypothesisId: 'J'});
+        // #endregion
+      } catch (e) {
+        // #region agent log
+        log({location: 'vite.config.ts:build-logger', message: '404.html creation failed', data: {error: String(e)}, hypothesisId: 'J'});
+        // #endregion
+      }
+    }
+    const files = indexExists ? fs.readdirSync(outDir).slice(0, 10) : [];
+    // #region agent log
+    log({location: 'vite.config.ts:build-logger', message: 'Build completed', data: {outDir, indexExists, fileCount: files.length, sampleFiles: files}, hypothesisId: 'A'});
+    log({location: 'vite.config.ts:build-logger', message: 'Index.html check', data: {indexPath, exists: indexExists}, hypothesisId: 'D'});
+    log({location: 'vite.config.ts:build-logger', message: '404.html final check', data: {fourOhFourPath, exists: fs.existsSync(fourOhFourPath)}, hypothesisId: 'J'});
+    // #endregion
+  }
+});
+// #endregion
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), buildLoggerPlugin()];
+
+const outDir = path.resolve(import.meta.dirname, "dist/public");
+const basePath = '/';
+
+// #region agent log
+log({location: 'vite.config.ts:20', message: 'Build config initialized', data: {outDir, basePath, nodeEnv: process.env.NODE_ENV}, hypothesisId: 'A'});
+// #endregion
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/our-love-story/' : '/',
-  base: '/',
+  base: basePath,
   plugins,
   resolve: {
     alias: {
@@ -22,7 +81,7 @@ export default defineConfig({
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    outDir: outDir,
     emptyOutDir: true,
   },
   server: {
