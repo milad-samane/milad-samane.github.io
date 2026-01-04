@@ -14,18 +14,19 @@ const log = (data: any) => {
   } catch {}
 };
 
-const buildLoggerPlugin = () => ({
-  name: 'build-logger',
-  closeBundle: () => {
+const buildLoggerPlugin = () => {
+  const createRequiredFiles = () => {
     const outDir = path.resolve(import.meta.dirname, "dist/public");
     const indexPath = path.join(outDir, "index.html");
     const nojekyllPath = path.join(outDir, ".nojekyll");
     const fourOhFourPath = path.join(outDir, "404.html");
     const indexExists = fs.existsSync(indexPath);
+    
     // #region agent log
-    log({location: 'vite.config.ts:build-logger', message: 'Before .nojekyll creation', data: {nojekyllPath, exists: fs.existsSync(nojekyllPath)}, hypothesisId: 'E'});
-    log({location: 'vite.config.ts:build-logger', message: 'Before 404.html creation', data: {fourOhFourPath, exists: fs.existsSync(fourOhFourPath)}, hypothesisId: 'J'});
+    log({location: 'vite.config.ts:build-logger', message: 'Creating required files', data: {outDir, indexExists}, hypothesisId: 'E'});
     // #endregion
+    
+    // Create .nojekyll file
     try {
       fs.writeFileSync(nojekyllPath, '');
       // #region agent log
@@ -35,7 +36,10 @@ const buildLoggerPlugin = () => ({
       // #region agent log
       log({location: 'vite.config.ts:build-logger', message: '.nojekyll creation failed', data: {error: String(e)}, hypothesisId: 'E'});
       // #endregion
+      console.error('Failed to create .nojekyll:', e);
     }
+    
+    // Create 404.html from index.html for SPA routing
     if (indexExists) {
       try {
         const indexContent = fs.readFileSync(indexPath, 'utf-8');
@@ -47,16 +51,27 @@ const buildLoggerPlugin = () => ({
         // #region agent log
         log({location: 'vite.config.ts:build-logger', message: '404.html creation failed', data: {error: String(e)}, hypothesisId: 'J'});
         // #endregion
+        console.error('Failed to create 404.html:', e);
       }
+    } else {
+      // #region agent log
+      log({location: 'vite.config.ts:build-logger', message: 'Index.html not found, cannot create 404.html', data: {indexPath}, hypothesisId: 'D'});
+      // #endregion
+      console.warn('Warning: index.html not found at', indexPath);
     }
-    const files = indexExists ? fs.readdirSync(outDir).slice(0, 10) : [];
+    
+    const files = fs.existsSync(outDir) ? fs.readdirSync(outDir).slice(0, 10) : [];
     // #region agent log
-    log({location: 'vite.config.ts:build-logger', message: 'Build completed', data: {outDir, indexExists, fileCount: files.length, sampleFiles: files}, hypothesisId: 'A'});
-    log({location: 'vite.config.ts:build-logger', message: 'Index.html check', data: {indexPath, exists: indexExists}, hypothesisId: 'D'});
-    log({location: 'vite.config.ts:build-logger', message: '404.html final check', data: {fourOhFourPath, exists: fs.existsSync(fourOhFourPath)}, hypothesisId: 'J'});
+    log({location: 'vite.config.ts:build-logger', message: 'Build output summary', data: {outDir, indexExists, fileCount: files.length, sampleFiles: files, nojekyllExists: fs.existsSync(nojekyllPath), fourOhFourExists: fs.existsSync(fourOhFourPath)}, hypothesisId: 'A'});
     // #endregion
-  }
-});
+  };
+  
+  return {
+    name: 'build-logger',
+    writeBundle: createRequiredFiles, // Runs after each bundle is written
+    closeBundle: createRequiredFiles, // Runs when bundle is closed (backup)
+  };
+};
 // #endregion
 
 const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), buildLoggerPlugin()];
