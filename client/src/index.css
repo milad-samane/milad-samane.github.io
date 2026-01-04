@@ -143,6 +143,9 @@
   }
   .font-persian {
     font-family: 'Vazirmatn', sans-serif;
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: embed;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

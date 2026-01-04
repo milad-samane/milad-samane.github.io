@@ -122,7 +122,7 @@ export default function Home() {
             }}
           />
 
-          <div className="font-persian text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 text-right space-y-6">
+          <div className="font-persian text-lg md:text-xl text-foreground/80 leading-relaxed mb-8 space-y-6" dir="rtl">
             <p className="font-semibold text-primary mb-4">
               به نامِ آفریننده عشق
             </p>
