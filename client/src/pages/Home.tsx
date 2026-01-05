@@ -14,6 +14,8 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const heroRef = useRef<HTMLDivElement>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const tracks = [
     {
@@ -217,7 +219,15 @@ export default function Home() {
               {tracks.map((track, index) => (
                 <div
                   key={track.src}
-                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-primary/5 transition-colors"
+                  className={`flex items-center gap-4 p-4 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer ${
+                    index === currentTrackIndex ? "bg-primary/10" : ""
+                  }`}
+                  onClick={() => {
+                    setCurrentTrackIndex(index);
+                    if (audioRef.current) {
+                      audioRef.current.play().catch(() => {});
+                    }
+                  }}
                 >
                   <Music className="w-5 h-5 text-primary flex-shrink-0" />
                   <div className="flex-1">
@@ -236,13 +246,11 @@ export default function Home() {
             </div>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg text-center">
-              <p className="text-foreground/70 mb-4">
-                آهنگ‌های مورد علاقه‌مان را اینجا گذاشتیم تا همراه با آن‌ها، خاطراتمان را دوباره زندگی کنیم.
-              </p>
               <audio
                 controls
                 className="w-full mt-4"
-                src={tracks[0]?.src}
+                ref={audioRef}
+                src={tracks[currentTrackIndex]?.src}
               >
                 Your browser does not support the audio element.
               </audio>
