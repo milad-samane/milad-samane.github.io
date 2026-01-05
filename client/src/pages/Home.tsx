@@ -15,6 +15,46 @@ export default function Home() {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const heroRef = useRef<HTMLDivElement>(null);
 
+  const tracks = [
+    {
+      title: "Ghalbe Mani",
+      artist: "Haamim",
+      src: "/music/Haamim - Ghalbe Mani (128).mp3",
+      duration: "3:45",
+    },
+    {
+      title: "Az Doost Dashtan",
+      artist: "Homayoun Shajaryan",
+      src: " /music/Homayoun Shajaryan-Az Doost Dashtan -musicdel.ir 128.mp3",
+      duration: "4:10",
+    },
+    {
+      title: "Chelcheragh",
+      artist: "Reza Yazdani",
+      src: "/music/Reza Yazdani - Chelcheragh (128).mp3",
+      duration: "4:00",
+    },
+  ];
+
+  const photos = [
+    {
+      src: "/images/decorative-roses.jpg",
+      label: "Roses",
+    },
+    {
+      src: "/images/photo_2026-01-05_12-11-38.jpg",
+      label: "Memory 1",
+    },
+    {
+      src: "/images/photo_2026-01-05_12-12-44.jpg",
+      label: "Memory 2",
+    },
+    {
+      src: "/images/photo_2026-01-05_12-13-18.jpg",
+      label: "Memory 3",
+    },
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -174,28 +214,38 @@ export default function Home() {
 
           <div className="bg-white rounded-lg shadow-lg p-8 md:p-12">
             <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((i) => (
+              {tracks.map((track, index) => (
                 <div
-                  key={i}
+                  key={track.src}
                   className="flex items-center gap-4 p-4 rounded-lg hover:bg-primary/5 transition-colors"
                 >
                   <Music className="w-5 h-5 text-primary flex-shrink-0" />
                   <div className="flex-1">
-                    <p className="font-semibold text-foreground">Song {i}</p>
-                    <p className="text-sm text-foreground/60">Artist Name</p>
+                    <p className="font-semibold text-foreground">
+                      {index + 1}. {track.title}
+                    </p>
+                    <p className="text-sm text-foreground/60">
+                      {track.artist}
+                    </p>
                   </div>
-                  <span className="text-sm text-foreground/50">3:45</span>
+                  <span className="text-sm text-foreground/50">
+                    {track.duration}
+                  </span>
                 </div>
               ))}
             </div>
 
             <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg text-center">
               <p className="text-foreground/70 mb-4">
-                Add your Spotify playlist or songs here
+                آهنگ‌های مورد علاقه‌مان را اینجا گذاشتیم تا همراه با آن‌ها، خاطراتمان را دوباره زندگی کنیم.
               </p>
-              <Button className="bg-primary hover:bg-primary/90 text-white">
-                Add Your Playlist
-              </Button>
+              <audio
+                controls
+                className="w-full mt-4"
+                src={tracks[0]?.src}
+              >
+                Your browser does not support the audio element.
+              </audio>
             </div>
           </div>
         </div>
@@ -215,14 +265,14 @@ export default function Home() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {photos.map((photo) => (
               <div
-                key={i}
-                className="romantic-frame h-64 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center hover:shadow-xl transition-shadow"
+                key={photo.src}
+                className="romantic-frame h-64 bg-cover bg-center flex items-center justify-center hover:shadow-xl transition-shadow"
+                style={{ backgroundImage: `url('${photo.src}')` }}
               >
-                <div className="text-center">
-                  <p className="text-5xl mb-2">📷</p>
-                  <p className="text-foreground/60">Photo {i}</p>
+                <div className="bg-background/70 px-4 py-2 rounded-full text-sm text-foreground/70">
+                  {photo.label}
                 </div>
               </div>
             ))}
